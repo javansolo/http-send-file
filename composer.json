@@ -1,0 +1,21 @@
+{
+  "name": "javansolo/http-send-file",
+  "description": "PHP lib which sends a file with support for (multiple) range requests and throttle.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.0",
+    "ext-fileinfo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Javansolo\\HttpSendFile\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "shariaty",
+      "email": "javan.solo@gmail.com"
+    }
+  ]
+}
