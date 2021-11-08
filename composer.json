@@ -3,7 +3,14 @@
   "description": "PHP lib which sends a file with support for (multiple) range requests and throttle.",
   "type": "library",
   "license": "MIT",
-  "keywords": ["php","http", "file", "download", "resume", "throttle"],
+  "keywords": [
+    "php",
+    "http",
+    "file",
+    "download",
+    "resume",
+    "throttle"
+  ],
   "homepage": "https://github.com/javansolo/http-send-file",
   "require": {
     "php": ">=7.0",
