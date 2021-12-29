@@ -13,7 +13,8 @@
   ],
   "require": {
     "php": ">=7.0",
-    "ext-fileinfo": "*"
+    "ext-fileinfo": "*",
+	"composer-runtime-api": "^2.0"
   },
   "autoload": {
     "psr-4": {
