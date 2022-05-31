@@ -7,31 +7,36 @@ use Exception;
 class SendFile
 {
     /**
-     * if false we set content disposition from file that will be sent
-     * @var mixed $disposition
+     * if false we set content disposition from file that will be sent.
+     *
+     * @var mixed
      */
     protected $disposition = false;
 
     /**
-     * throttle speed in second
-     * @var float $sec
+     * throttle speed in second.
+     *
+     * @var float
      */
     protected $sec = 0.1;
 
     /**
-     * bytes per $sec
-     * @var int $bytes
+     * bytes per $sec.
+     *
+     * @var int
      */
     protected $bytes = 40960;
 
     /**
-     * if contentType is false we try to guess it
-     * @var mixed $contentType
+     * if contentType is false we try to guess it.
+     *
+     * @var mixed
      */
     protected $type = false;
 
     /**
-     * set content disposition
+     * set content disposition.
+     *
      * @param mixed $file_name
      */
     public function contentDisposition($file_name = false)
@@ -40,9 +45,10 @@ class SendFile
     }
 
     /**
-     * set throttle speed
+     * set throttle speed.
+     *
      * @param float $sec
-     * @param int $bytes
+     * @param int   $bytes
      */
     public function throttle(float $sec = 0.1, int $bytes = 40960)
     {
@@ -51,7 +57,8 @@ class SendFile
     }
 
     /**
-     * set content mime type if false we try to guess it
+     * set content mime type if false we try to guess it.
+     *
      * @param string|bool $content_type
      */
     public function contentType($content_type = null)
@@ -60,16 +67,16 @@ class SendFile
     }
 
     /**
-     * Sets-up headers and starts transfer bytes
+     * Sets-up headers and starts transfer bytes.
      *
-     * @param string $file_path
-     * @param boolean $withDisposition
+     * @param string                   $file_path
+     * @param bool                     $withDisposition
      * @param callable|callable-string $callBackEndOfFile
+     *
      * @throws Exception
      */
     public function send(string $file_path, bool $withDisposition = true, $callBackEndOfFile = null)
     {
-
         if (!is_readable($file_path)) {
             throw new Exception('File not found or inaccessible!');
         }
@@ -91,23 +98,23 @@ class SendFile
             ini_set('zlib.output_compression', 'Off');
         }
 
-        header('Content-Type: ' . $this->type);
+        header('Content-Type: '.$this->type);
         if ($withDisposition) {
-            header('Content-Disposition: attachment; filename="' . $this->disposition . '"');
+            header('Content-Disposition: attachment; filename="'.$this->disposition.'"');
         }
         header('Accept-Ranges: bytes');
 
         // The three lines below basically make the
         // download non-cacheable
-        header("Cache-control: private");
+        header('Cache-control: private');
         header('Pragma: private');
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
         // multipart-download and download resuming support
         if (isset($_SERVER['HTTP_RANGE'])) {
-            list(, $range) = explode("=", $_SERVER['HTTP_RANGE'], 2);
-            list($range) = explode(",", $range, 2);
-            list($range, $range_end) = explode("-", $range);
+            list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+            list($range) = explode(',', $range, 2);
+            list($range, $range_end) = explode('-', $range);
             $range = intval($range);
             if (!$range_end) {
                 $range_end = $size - 1;
@@ -116,12 +123,12 @@ class SendFile
             }
 
             $new_length = $range_end - $range + 1;
-            header("HTTP/1.1 206 Partial Content");
+            header('HTTP/1.1 206 Partial Content');
             header("Content-Length: $new_length");
             header("Content-Range: bytes $range-$range_end/$size");
         } else {
             $new_length = $size;
-            header("Content-Length: " . $size);
+            header('Content-Length: '.$size);
         }
 
         /* output the file itself */
@@ -150,19 +157,24 @@ class SendFile
     }
 
     /**
-     * get name from path info
+     * get name from path info.
+     *
      * @param mixed $file
+     *
      * @return string
      */
     protected function name($file): string
     {
         $info = pathinfo($file);
+
         return $info['basename'];
     }
 
     /**
-     * method for getting mime type of file
+     * method for getting mime type of file.
+     *
      * @param string $path
+     *
      * @return string $mime_type
      */
     protected function getContentType(string $path)
@@ -175,17 +187,18 @@ class SendFile
                     $result = finfo_file($finfo, $path);
                 }
                 finfo_close($finfo);
-            } else if (function_exists('mime_content_type') === true) {
+            } elseif (function_exists('mime_content_type') === true) {
                 $result = preg_replace('~^(.+);.*$~', '$1', mime_content_type($path));
-            } else if (function_exists('exif_imagetype') === true) {
+            } elseif (function_exists('exif_imagetype') === true) {
                 $result = image_type_to_mime_type(exif_imagetype($path));
             }
         }
+
         return $result;
     }
 
     /**
-     * clean all buffers
+     * clean all buffers.
      */
     protected function cleanAll()
     {
